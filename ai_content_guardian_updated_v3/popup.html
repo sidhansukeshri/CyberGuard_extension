@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Content Guardian</title>
+    <link rel="stylesheet" href="styles/popup.css">
+</head>
+<body>
+    <div class="popup-container">
+        <header class="popup-header">
+            <h1>AI Content Guardian</h1>
+            <p class="tagline">Making the web safer in real-time</p>
+        </header>
+
+        <div class="main-toggle">
+            <span>Enable Protection</span>
+            <label class="switch">
+                <input type="checkbox" id="mainToggle" checked>
+                <span class="slider round"></span>
+            </label>
+        </div>
+
+        <div class="settings-container">
+            <h2>Protection Settings</h2>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <span>Automatically Rephrase Content</span>
+                    <span class="setting-description">Replace harmful content with safer alternatives</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="autoRephraseToggle" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <span>Show Warning Indicators</span>
+                    <span class="setting-description">Display warning badges near harmful content</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="showWarningsToggle" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <span>Sensitivity Level</span>
+                    <span class="setting-description">Adjust detection threshold</span>
+                </div>
+                <div class="select-wrapper">
+                    <select id="sensitivityLevel">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-container">
+            <h2>Protection Statistics</h2>
+            <div class="stat-item">
+                <span class="stat-label">Content Analyzed</span>
+                <span class="stat-value" id="contentAnalyzedCount">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Harmful Content Detected</span>
+                <span class="stat-value" id="harmfulContentCount">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Content Rephrased</span>
+                <span class="stat-value" id="rephrasedContentCount">0</span>
+            </div>
+        </div>
+
+        <footer class="popup-footer">
+            <button id="resetBtn" class="reset-button">Reset Statistics</button>
+            <p class="version">Version 1.0</p>
+        </footer>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>

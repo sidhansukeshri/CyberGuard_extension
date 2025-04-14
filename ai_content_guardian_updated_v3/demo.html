@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Content Guardian Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #212121;
+        }
+        
+        h1 {
+            color: #2E7D32;
+            border-bottom: 2px solid #E8F5E9;
+            padding-bottom: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid #E0E0E0;
+            border-bottom: none;
+            background: #F5F5F5;
+            margin-right: 5px;
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .tab.active {
+            background: white;
+            border-bottom: 1px solid white;
+            font-weight: bold;
+            color: #2E7D32;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .demo-section {
+            border: 1px solid #E0E0E0;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .popup-container {
+            width: 320px;
+            padding: 16px;
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+        }
+        
+        .popup-header {
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .popup-header h2 {
+            color: #2E7D32;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .tagline {
+            color: #757575;
+            font-size: 12px;
+            font-style: italic;
+        }
+        
+        .main-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background-color: #E8F5E9;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        
+        .settings-container {
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
+        
+        .settings-container h3 {
+            padding: 12px 16px;
+            border-bottom: 1px solid #E0E0E0;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .setting-description {
+            font-size: 11px;
+            color: #757575;
+            margin-top: 2px;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: all 0.3s ease;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+        
+        input:checked + .slider {
+            background-color: #2E7D32;
+        }
+        
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2E7D32;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+        
+        .slider.round {
+            border-radius: 34px;
+        }
+        
+        .slider.round:before {
+            border-radius: 50%;
+        }
+        
+        .stats-container {
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
+        
+        .stats-container h3 {
+            padding: 12px 16px;
+            border-bottom: 1px solid #E0E0E0;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+        
+        .stat-value {
+            font-weight: 600;
+            color: #2E7D32;
+        }
+        
+        .popup-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+        
+        .reset-button {
+            background-color: transparent;
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .reset-button:hover {
+            background-color: #F5F5F5;
+        }
+        
+        .version {
+            font-size: 11px;
+            color: #757575;
+        }
+        
+        /* Content protection demo styles */
+        .content-demo {
+            border: 1px solid #E0E0E0;
+            padding: 20px;
+            border-radius: 4px;
+            position: relative;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .harmful-content {
+            position: relative;
+            border-bottom: 1px dotted #FFA000;
+            display: inline-block;
+        }
+        
+        .warning-badge {
+            position: absolute;
+            right: -20px;
+            top: -10px;
+            width: 18px;
+            height: 18px;
+            background-color: #FFA000;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        .warning-tooltip {
+            visibility: hidden;
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(33, 33, 33, 0.9);
+            color: white;
+            text-align: center;
+            padding: 6px 10px;
+            border-radius: 4px;
+            width: 200px;
+            font-size: 12px;
+            z-index: 11;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .warning-badge:hover .warning-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .warning-tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: rgba(33, 33, 33, 0.9) transparent transparent transparent;
+        }
+        
+        .rephrased-content {
+            background-color: #E8F5E9;
+            padding: 0 2px;
+            border-bottom: 1px dotted #2E7D32;
+            display: inline-block;
+            position: relative;
+        }
+        
+        .edit-indicator {
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 4px;
+            width: 14px;
+            height: 14px;
+            color: #2E7D32;
+            cursor: pointer;
+        }
+        
+        .original-text {
+            display: none;
+            position: absolute;
+            top: -30px;
+            left: 0;
+            background-color: #FFF9C4;
+            padding: 5px;
+            border: 1px solid #FBC02D;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 12;
+            width: max-content;
+            max-width: 300px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .edit-indicator:hover + .original-text {
+            display: block;
+        }
+        
+        .harmful {
+            background-color: #FFEBEE;
+        }
+        
+        .offensive {
+            background-color: #FFF8E1;
+        }
+        
+        .inappropriate {
+            background-color: #F9FBE7;
+        }
+        
+        select {
+            width: 100px;
+            padding: 6px 10px;
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            background-color: white;
+            font-family: inherit;
+        }
+    </style>
+</head>
+<body>
+    <h1>AI Content Guardian Demo</h1>
+    
+    <p>This demo illustrates how the AI Content Guardian Chrome extension works to detect, warn about, and rephrase harmful web content in real-time.</p>
+    
+    <div class="tabs">
+        <div class="tab active" data-tab="popup">Extension Popup</div>
+        <div class="tab" data-tab="content">Content Protection</div>
+        <div class="tab" data-tab="features">Features Overview</div>
+    </div>
+    
+    <div class="tab-content active" id="popup">
+        <h2>Extension Popup Interface</h2>
+        <p>This is what the extension popup looks like when you click on the extension icon in Chrome:</p>
+        
+        <div class="popup-container">
+            <div class="popup-header">
+                <h2>AI Content Guardian</h2>
+                <p class="tagline">Making the web safer in real-time</p>
+            </div>
+    
+            <div class="main-toggle">
+                <span>Enable Protection</span>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+    
+            <div class="settings-container">
+                <h3>Protection Settings</h3>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span>Automatically Rephrase Content</span>
+                        <span class="setting-description">Replace harmful content with safer alternatives</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span>Show Warning Indicators</span>
+                        <span class="setting-description">Display warning badges near harmful content</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span>Sensitivity Level</span>
+                        <span class="setting-description">Adjust detection threshold</span>
+                    </div>
+                    <div class="select-wrapper">
+                        <select>
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="stats-container">
+                <h3>Protection Statistics</h3>
+                <div class="stat-item">
+                    <span class="stat-label">Content Analyzed</span>
+                    <span class="stat-value">1,246</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Harmful Content Detected</span>
+                    <span class="stat-value">32</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Content Rephrased</span>
+                    <span class="stat-value">28</span>
+                </div>
+            </div>
+    
+            <div class="popup-footer">
+                <button class="reset-button">Reset Statistics</button>
+                <p class="version">Version 1.0</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tab-content" id="content">
+        <h2>Content Protection Demo</h2>
+        <p>This demonstrates how harmful content is detected and rephrased in real-time. The extension analyzes page content and makes modifications automatically.</p>
+        
+        <div class="demo-section">
+            <h3>Warning Indicators Example</h3>
+            <p>When harmful content is detected, the extension adds warning indicators:</p>
+            
+            <div class="content-demo">
+                <p>This article discusses 
+                    <span class="harmful-content">
+                        how to create harmful devices
+                        <span class="warning-badge">⚠
+                            <span class="warning-tooltip">This content may cause harm or promote harmful activities. (high confidence)</span>
+                        </span>
+                    </span> 
+                    for educational purposes only.
+                </p>
+            </div>
+            
+            <h3>Content Rephrasing Example</h3>
+            <p>When automatic rephrasing is enabled, harmful content is replaced with safer alternatives:</p>
+            
+            <div class="content-demo">
+                <p>The discussion about 
+                    <span class="rephrased-content">
+                        how to create educational science projects
+                        <span class="edit-indicator">✎</span>
+                        <span class="original-text">Original text: "how to make explosives at home"</span>
+                    </span> 
+                    should be approached with caution.
+                </p>
+            </div>
+            
+            <h3>Multiple Detection Categories</h3>
+            <p>The extension can identify different types of harmful content:</p>
+            
+            <div class="content-demo">
+                <p>
+                    <span class="harmful-content harmful">
+                        Instructions on harming others
+                        <span class="warning-badge">⚠
+                            <span class="warning-tooltip">This content may cause harm or promote harmful activities. (high confidence)</span>
+                        </span>
+                    </span>
+                </p>
+                <p>
+                    <span class="harmful-content offensive">
+                        Offensive language and insults
+                        <span class="warning-badge">⚠
+                            <span class="warning-tooltip">This content contains offensive language or sentiments. (moderate confidence)</span>
+                        </span>
+                    </span>
+                </p>
+                <p>
+                    <span class="harmful-content inappropriate">
+                        Inappropriate adult content
+                        <span class="warning-badge">⚠
+                            <span class="warning-tooltip">This content contains inappropriate material that may be unsuitable. (moderate confidence)</span>
+                        </span>
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tab-content" id="features">
+        <h2>Features Overview</h2>
+        
+        <div class="demo-section">
+            <h3>Key Features</h3>
+            <ul>
+                <li><strong>Real-time Content Analysis:</strong> Scans webpage content as you browse using a BART AI model.</li>
+                <li><strong>Multiple Detection Categories:</strong> Identifies harmful, offensive, and inappropriate content.</li>
+                <li><strong>Visual Warning System:</strong> Adds non-intrusive warning badges to flagged content.</li>
+                <li><strong>Automatic Content Rephrasing:</strong> Replaces harmful content with safer alternatives.</li>
+                <li><strong>Customizable Settings:</strong> Adjust sensitivity levels and choose which protections to enable.</li>
+                <li><strong>Performance Optimized:</strong> Uses local detection as a fallback when AI services are unavailable.</li>
+                <li><strong>Usage Statistics:</strong> Tracks how many pieces of content have been analyzed and modified.</li>
+            </ul>
+            
+            <h3>How It Works</h3>
+            <ol>
+                <li>The extension scans text elements on webpages as they load.</li>
+                <li>Text is sent to a BART AI model for analysis (or processed locally).</li>
+                <li>Content categorized as harmful, offensive, or inappropriate is flagged.</li>
+                <li>Based on user settings, the extension either adds warnings or rephrases content.</li>
+                <li>Modified content is highlighted with subtle visual indicators.</li>
+                <li>The extension caches results to avoid re-analyzing the same content.</li>
+            </ol>
+            
+            <h3>Privacy & Performance</h3>
+            <p>The extension prioritizes user privacy and browsing performance:</p>
+            <ul>
+                <li>Analysis is performed on the user's device when possible.</li>
+                <li>When using AI services, only text snippets are transmitted, never personal data.</li>
+                <li>The extension uses throttling to avoid impacting page load times.</li>
+                <li>Users can disable the extension on specific sites or temporarily with one click.</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // Simple tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and content
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Show corresponding content
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

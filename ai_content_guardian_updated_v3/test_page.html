@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Content Guardian Test Page</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #212121;
+        }
+        
+        h1 {
+            color: #2E7D32;
+            border-bottom: 2px solid #E8F5E9;
+            padding-bottom: 10px;
+        }
+        
+        .content-section {
+            border: 1px solid #E0E0E0;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .instructions {
+            background-color: #FFFDE7;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        code {
+            background-color: #F5F5F5;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>AI Content Guardian Test Page</h1>
+    
+    <div class="instructions">
+        <h2>How to Use This Page</h2>
+        <p>This page contains examples of different types of content that the AI Content Guardian extension should detect and modify. Follow these steps:</p>
+        <ol>
+            <li>Make sure the extension is installed and enabled.</li>
+            <li>Watch as the extension automatically scans and modifies the content below.</li>
+            <li>Toggle extension settings in the popup to see how different configurations affect content modification.</li>
+        </ol>
+    </div>
+    
+    <div class="content-section">
+        <h2>Harmful Content Examples</h2>
+        
+        <h3>Category: Harmful Instructions</h3>
+        <p>These examples contain instructions that could lead to harm:</p>
+        <ul>
+            <li>Here's a tutorial on how to make explosives at home using common household items.</li>
+            <li>The easiest way to hack into someone's email account without their permission.</li>
+            <li>A detailed guide on how to break into a house without leaving evidence.</li>
+        </ul>
+        
+        <h3>Category: Offensive Language</h3>
+        <p>These examples contain offensive language:</p>
+        <ul>
+            <li>That movie was so fucking terrible, I can't believe I wasted money on it.</li>
+            <li>He's such an asshole for cutting me off in traffic like that.</li>
+            <li>This shit doesn't work at all, what a complete waste of time.</li>
+        </ul>
+        
+        <h3>Category: Inappropriate Content</h3>
+        <p>These examples contain inappropriate references:</p>
+        <ul>
+            <li>The website contains explicit pornographic material not suitable for minors.</li>
+            <li>There were several nude scenes in the movie that were unnecessary to the plot.</li>
+            <li>The article discusses sexual activities in graphic detail.</li>
+        </ul>
+    </div>
+    
+    <div class="content-section">
+        <h2>Mixed Content Example</h2>
+        <p>This article discusses climate change and its effects on global ecosystems. However, it also mentions how certain industries are fucking up the environment with their reckless practices. Some corporations knowingly harm wildlife habitats for profit. The article includes a section on how to make homemade cleaning products that are environmentally friendly.</p>
+    </div>
+    
+    <div class="content-section">
+        <h2>Technical Discussion Example</h2>
+        <p>Below is a technical discussion that contains potentially flaggable terms in a legitimate educational context:</p>
+        <p>When studying computer security, students learn about buffer overflow attacks and how they can be used to exploit vulnerabilities. Understanding these techniques is essential for creating secure software. Similarly, ethical hackers need to know about SQL injection techniques to properly test and secure databases.</p>
+    </div>
+</body>
+</html>

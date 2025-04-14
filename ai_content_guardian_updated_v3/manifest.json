@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "AI Content Guardian",
+  "version": "1.0",
+  "description": "Uses AI to detect, warn about, and rephrase harmful web content in real-time.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["utils/ai-service.js", "utils/dom-utils.js", "content.js"],
+      "css": ["styles/content.css"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "assets/icon16.svg",
+      "48": "assets/icon48.svg",
+      "128": "assets/icon128.svg"
+    }
+  },
+  "icons": {
+    "16": "assets/icon16.svg",
+    "48": "assets/icon48.svg",
+    "128": "assets/icon128.svg"
+  }
+}

@@ -1,0 +1,261 @@
+/* AI Content Guardian - Popup Styles */
+
+/* Variables */
+:root {
+  --primary: #2E7D32;
+  --warning: #FFA000;
+  --danger: #C62828;
+  --neutral: #F5F5F5;
+  --text: #212121;
+  --text-light: #757575;
+  --highlight: #E8F5E9;
+  --border: #E0E0E0;
+  
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+  --border-radius: 4px;
+  --transition: all 0.3s ease;
+}
+
+/* Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--neutral);
+  color: var(--text);
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.popup-container {
+  width: 320px;
+  padding: 16px;
+  background: white;
+}
+
+/* Header */
+.popup-header {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.popup-header h1 {
+  color: var(--primary);
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.tagline {
+  color: var(--text-light);
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* Main Toggle */
+.main-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: var(--highlight);
+  border-radius: var(--border-radius);
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+/* Settings Container */
+.settings-container {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  margin-bottom: 16px;
+  transition: var(--transition);
+}
+
+.settings-container h2 {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.setting-item:last-child {
+  border-bottom: none;
+}
+
+.setting-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.setting-description {
+  font-size: 11px;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+/* Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: var(--transition);
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: var(--transition);
+}
+
+input:checked + .slider {
+  background-color: var(--primary);
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px var(--primary);
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* Select Dropdown */
+.select-wrapper {
+  position: relative;
+  width: 100px;
+}
+
+select {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  background-color: white;
+  appearance: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.select-wrapper::after {
+  content: "▼";
+  font-size: 10px;
+  color: var(--text-light);
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Stats Container */
+.stats-container {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  margin-bottom: 16px;
+  transition: var(--transition);
+}
+
+.stats-container h2 {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+}
+
+.stat-value {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* Footer */
+.popup-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.reset-button {
+  background-color: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  padding: 6px 12px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  transition: var(--transition);
+}
+
+.reset-button:hover {
+  background-color: var(--neutral);
+}
+
+.version {
+  font-size: 11px;
+  color: var(--text-light);
+}
+
+/* Disabled State */
+.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}

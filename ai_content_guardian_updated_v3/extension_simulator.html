@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Content Guardian - Extension Simulator</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #212121;
+        }
+        
+        h1 {
+            color: #2E7D32;
+            border-bottom: 2px solid #E8F5E9;
+            padding-bottom: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid #E0E0E0;
+            border-bottom: none;
+            background: #F5F5F5;
+            margin-right: 5px;
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .tab.active {
+            background: white;
+            border-bottom: 1px solid white;
+            font-weight: bold;
+            color: #2E7D32;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .control-panel {
+            background: #F5F5F5;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: all 0.3s ease;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+        
+        input:checked + .slider {
+            background-color: #2E7D32;
+        }
+        
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2E7D32;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+        
+        .slider.round {
+            border-radius: 34px;
+        }
+        
+        .slider.round:before {
+            border-radius: 50%;
+        }
+        
+        .content-section {
+            border: 1px solid #E0E0E0;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .harmful-content {
+            position: relative;
+            border-bottom: 1px dotted #FFA000;
+            display: inline-block;
+        }
+        
+        .warning-badge {
+            position: absolute;
+            right: -20px;
+            top: -10px;
+            width: 18px;
+            height: 18px;
+            background-color: #FFA000;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        .warning-tooltip {
+            visibility: hidden;
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(33, 33, 33, 0.9);
+            color: white;
+            text-align: center;
+            padding: 6px 10px;
+            border-radius: 4px;
+            width: 200px;
+            font-size: 12px;
+            z-index: 11;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .warning-badge:hover .warning-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .warning-tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: rgba(33, 33, 33, 0.9) transparent transparent transparent;
+        }
+        
+        .rephrased-content {
+            background-color: #FFFDE7; /* Changed from green to yellow */
+            padding: 0 2px;
+            border-bottom: 1px dotted #2E7D32;
+            display: inline-block;
+            position: relative;
+        }
+        
+        .edit-indicator {
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 4px;
+            width: 14px;
+            height: 14px;
+            color: #2E7D32;
+            cursor: pointer;
+        }
+        
+        .original-text {
+            display: none;
+            position: absolute;
+            top: -30px;
+            left: 0;
+            background-color: #FFF9C4;
+            padding: 5px;
+            border: 1px solid #FBC02D;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 12;
+            width: max-content;
+            max-width: 300px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .edit-indicator:hover + .original-text {
+            display: block;
+        }
+        
+        .harmful {
+            background-color: #FFEBEE;
+        }
+        
+        .offensive {
+            background-color: #FFF8E1;
+        }
+        
+        .inappropriate {
+            background-color: #F9FBE7;
+        }
+        
+        select {
+            width: 100px;
+            padding: 6px 10px;
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            background-color: white;
+            font-family: inherit;
+        }
+        
+        button {
+            background-color: #2E7D32;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        
+        button:hover {
+            background-color: #1B5E20;
+        }
+        
+        .settings-item {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+        
+        .settings-item label {
+            margin-right: 10px;
+        }
+        
+        #stats {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #757575;
+        }
+        
+        .stats-value {
+            font-weight: bold;
+            color: #2E7D32;
+        }
+    </style>
+</head>
+<body>
+    <h1>AI Content Guardian - Extension Simulator</h1>
+    
+    <p>This page simulates the AI Content Guardian Chrome extension to demonstrate how it detects, warns about, and rephrases harmful web content in real-time.</p>
+    
+    <div class="control-panel">
+        <div class="settings-item">
+            <label for="enableProtection">Enable Protection</label>
+            <label class="switch">
+                <input type="checkbox" id="enableProtection" checked>
+                <span class="slider round"></span>
+            </label>
+        </div>
+        
+        <div class="settings-item">
+            <label for="autoRephrase">Auto-Rephrase</label>
+            <label class="switch">
+                <input type="checkbox" id="autoRephrase" checked>
+                <span class="slider round"></span>
+            </label>
+        </div>
+        
+        <div class="settings-item">
+            <label for="showWarnings">Show Warnings</label>
+            <label class="switch">
+                <input type="checkbox" id="showWarnings" checked>
+                <span class="slider round"></span>
+            </label>
+        </div>
+        
+        <button id="analyzeButton">Analyze Content</button>
+    </div>
+    
+    <div class="content-section">
+        <h2>Harmful Content Examples</h2>
+        
+        <div id="harmful-examples">
+            <h3>Category: Harmful Instructions</h3>
+            <p>These examples contain instructions that could lead to harm:</p>
+            <ul>
+                <li data-content="Here's a tutorial on how to make explosives at home using common household items.">Here's a tutorial on how to make explosives at home using common household items.</li>
+                <li data-content="The easiest way to hack into someone's email account without their permission.">The easiest way to hack into someone's email account without their permission.</li>
+                <li data-content="A detailed guide on how to break into a house without leaving evidence.">A detailed guide on how to break into a house without leaving evidence.</li>
+            </ul>
+            
+            <h3>Category: Offensive Language</h3>
+            <p>These examples contain offensive language:</p>
+            <ul>
+                <li data-content="That movie was so fucking terrible, I can't believe I wasted money on it.">That movie was so fucking terrible, I can't believe I wasted money on it.</li>
+                <li data-content="He's such an asshole for cutting me off in traffic like that.">He's such an asshole for cutting me off in traffic like that.</li>
+                <li data-content="This shit doesn't work at all, what a complete waste of time.">This shit doesn't work at all, what a complete waste of time.</li>
+            </ul>
+            
+            <h3>Category: Inappropriate Content</h3>
+            <p>These examples contain inappropriate references:</p>
+            <ul>
+                <li data-content="The website contains explicit pornographic material not suitable for minors.">The website contains explicit pornographic material not suitable for minors.</li>
+                <li data-content="There were several nude scenes in the movie that were unnecessary to the plot.">There were several nude scenes in the movie that were unnecessary to the plot.</li>
+                <li data-content="The article discusses sexual activities in graphic detail.">The article discusses sexual activities in graphic detail.</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="content-section">
+        <h2>Mixed Content Example</h2>
+        <p id="mixed-content" data-content="This article discusses climate change and its effects on global ecosystems. However, it also mentions how certain industries are fucking up the environment with their reckless practices. Some corporations knowingly harm wildlife habitats for profit. The article includes a section on how to make homemade cleaning products that are environmentally friendly.">This article discusses climate change and its effects on global ecosystems. However, it also mentions how certain industries are fucking up the environment with their reckless practices. Some corporations knowingly harm wildlife habitats for profit. The article includes a section on how to make homemade cleaning products that are environmentally friendly.</p>
+    </div>
+    
+    <div id="stats">
+        <p>Content Analyzed: <span id="analyzed-count" class="stats-value">0</span></p>
+        <p>Harmful Content Detected: <span id="harmful-count" class="stats-value">0</span></p>
+        <p>Content Rephrased: <span id="rephrased-count" class="stats-value">0</span></p>
+    </div>
+    
+    <script>
+        // Stats counters
+        let analyzedCount = 0;
+        let harmfulCount = 0;
+        let rephrasedCount = 0;
+        
+        // DOM elements
+        const enableProtectionToggle = document.getElementById('enableProtection');
+        const autoRephraseToggle = document.getElementById('autoRephrase');
+        const showWarningsToggle = document.getElementById('showWarnings');
+        const analyzeButton = document.getElementById('analyzeButton');
+        
+        // Text elements to analyze
+        const textElements = document.querySelectorAll('[data-content]');
+        
+        // Stats display
+        const analyzedCountElement = document.getElementById('analyzed-count');
+        const harmfulCountElement = document.getElementById('harmful-count');
+        const rephrasedCountElement = document.getElementById('rephrased-count');
+        
+        // Remove all modifications
+        function removeAllModifications() {
+            document.querySelectorAll('.harmful-content').forEach(el => {
+                const parent = el.parentElement;
+                if (parent) {
+                    parent.innerHTML = el.getAttribute('data-original-text') || el.textContent;
+                }
+            });
+            
+            document.querySelectorAll('.rephrased-content').forEach(el => {
+                const parent = el.parentElement;
+                if (parent) {
+                    parent.innerHTML = el.getAttribute('data-original-text') || el.textContent;
+                }
+            });
+            
+            // Reset text elements to their original content
+            textElements.forEach(el => {
+                el.innerHTML = el.getAttribute('data-content');
+            });
+        }
+        
+        // Analyze text content
+        async function analyzeTextContent(text) {
+            try {
+                analyzedCount++;
+                analyzedCountElement.textContent = analyzedCount;
+                
+                console.log("Analyzing text:", text);
+                
+                // Use relative URL for API to work in any environment
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text })
+                });
+                
+                if (!response.ok) {
+                    console.error(`API request failed with status ${response.status}`);
+                    throw new Error(`API request failed with status ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log("Analysis result:", result);
+                return result;
+            } catch (error) {
+                console.error('Error analyzing content:', error);
+                // Return a basic fallback analysis
+                const result = {
+                    text,
+                    isHarmful: /fuck|shit|ass|porn|nude|sex|bomb|explosive|hack|break in|harm/i.test(text),
+                    category: /fuck|shit|ass/i.test(text) ? 'offensive' : 
+                             /porn|nude|sex/i.test(text) ? 'inappropriate' : 
+                             /bomb|explosive|hack|break in|harm/i.test(text) ? 'harmful' : 'safe',
+                    confidence: 0.7,
+                    explanation: 'Analysis performed locally due to API error'
+                };
+                console.log("Using fallback analysis:", result);
+                return result;
+            }
+        }
+        
+        // Rephrase harmful content
+        async function rephraseTextContent(text, category) {
+            try {
+                rephrasedCount++;
+                rephrasedCountElement.textContent = rephrasedCount;
+                
+                console.log("Rephrasing text:", text, "Category:", category);
+                
+                // Use relative URL for API to work in any environment
+                const response = await fetch('/rephrase', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text, category })
+                });
+                
+                if (!response.ok) {
+                    console.error(`API request failed with status ${response.status}`);
+                    throw new Error(`API request failed with status ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log("Rephrasing result:", result);
+                return result;
+            } catch (error) {
+                console.error('Error rephrasing content:', error);
+                // Return a basic fallback rephrasing
+                let rephrased = text;
+                
+                if (category === 'offensive') {
+                    rephrased = text.replace(/fuck/gi, '****').replace(/shit/gi, '****').replace(/ass/gi, '***');
+                } else if (category === 'inappropriate') {
+                    rephrased = text.replace(/porn/gi, 'content').replace(/nude/gi, 'unclothed').replace(/sex/gi, 'intimacy');
+                } else if (category === 'harmful') {
+                    rephrased = text.replace(/bomb|explosive/gi, 'educational project')
+                                 .replace(/hack|break in/gi, 'secure')
+                                 .replace(/harm/gi, 'protect');
+                }
+                
+                const result = {
+                    original: text,
+                    rephrased: rephrased
+                };
+                console.log("Using fallback rephrasing:", result);
+                return result;
+            }
+        }
+        
+        // Handle analysis results
+        function handleAnalysisResult(element, result) {
+            if (!result.isHarmful) {
+                return;
+            }
+            
+            harmfulCount++;
+            harmfulCountElement.textContent = harmfulCount;
+            
+            const text = element.textContent;
+            const showWarnings = showWarningsToggle.checked;
+            const autoRephrase = autoRephraseToggle.checked;
+            
+            if (showWarnings) {
+                // Add warning indicator
+                const wrapper = document.createElement('span');
+                wrapper.className = `harmful-content ${result.category}`;
+                wrapper.setAttribute('data-original-text', text);
+                
+                const warningBadge = document.createElement('span');
+                warningBadge.className = 'warning-badge';
+                warningBadge.textContent = '⚠';
+                
+                const tooltip = document.createElement('span');
+                tooltip.className = 'warning-tooltip';
+                tooltip.textContent = result.explanation;
+                
+                warningBadge.appendChild(tooltip);
+                wrapper.textContent = text;
+                wrapper.appendChild(warningBadge);
+                
+                element.innerHTML = '';
+                element.appendChild(wrapper);
+            }
+            
+            if (autoRephrase) {
+                rephraseContent(element, result);
+            }
+        }
+        
+        // Rephrase content
+        async function rephraseContent(element, result) {
+            try {
+                const text = element.getAttribute('data-content') || element.textContent;
+                const response = await rephraseTextContent(text, result.category);
+                
+                // Create rephrased content element
+                const wrapper = document.createElement('span');
+                wrapper.className = 'rephrased-content';
+                wrapper.setAttribute('data-original-text', text);
+                wrapper.textContent = response.rephrased;
+                
+                // Add edit indicator
+                const editIndicator = document.createElement('span');
+                editIndicator.className = 'edit-indicator';
+                editIndicator.textContent = '✎';
+                
+                // Add original text tooltip
+                const originalTextTooltip = document.createElement('span');
+                originalTextTooltip.className = 'original-text';
+                originalTextTooltip.textContent = `Original text: "${text}"`;
+                
+                wrapper.appendChild(editIndicator);
+                wrapper.appendChild(originalTextTooltip);
+                
+                element.innerHTML = '';
+                element.appendChild(wrapper);
+            } catch (error) {
+                console.error('Error rephrasing content:', error);
+            }
+        }
+        
+        // Analyze all content on the page
+        async function analyzeAllContent() {
+            if (!enableProtectionToggle.checked) {
+                removeAllModifications();
+                return;
+            }
+            
+            for (const element of textElements) {
+                const text = element.getAttribute('data-content');
+                if (text && text.length > 10) {
+                    const result = await analyzeTextContent(text);
+                    handleAnalysisResult(element, result);
+                }
+            }
+        }
+        
+        // Event listeners
+        enableProtectionToggle.addEventListener('change', function() {
+            if (this.checked) {
+                analyzeAllContent();
+            } else {
+                removeAllModifications();
+            }
+        });
+        
+        autoRephraseToggle.addEventListener('change', analyzeAllContent);
+        showWarningsToggle.addEventListener('change', analyzeAllContent);
+        analyzeButton.addEventListener('click', analyzeAllContent);
+        
+        // Initialize when the page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            // Start with protection disabled
+            enableProtectionToggle.checked = false;
+            
+            // Add click listener to enable the extension
+            enableProtectionToggle.addEventListener('click', function() {
+                if (this.checked) {
+                    console.log('Protection enabled - analyzing content');
+                    analyzeAllContent();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
